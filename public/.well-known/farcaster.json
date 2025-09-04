@@ -1,0 +1,30 @@
+{
+  "accountAssociation": {
+    "header": "",
+    "payload": "",
+    "signature": ""
+  },
+  "frame": {
+    "version": "1",
+    "name": "GrowthHackerAI",
+    "subtitle": "Built with Zara",
+    "description": "GrowthHackerAI is a Base Mini App built with Zara.",
+    "iconUrl": "https://0co.to/images/zara-2.png",
+    "homeUrl": "https://890cedad3e524e62819df09c2e4100bf-s975-chimiv2wh-vistara.vercel.app",
+    "splashImageUrl": "https://890cedad3e524e62819df09c2e4100bf-s975-chimiv2wh-vistara.vercel.app/splash.png",
+    "splashBackgroundColor": "#000000",
+    "heroImageUrl": "https://890cedad3e524e62819df09c2e4100bf-s975-chimiv2wh-vistara.vercel.app/image.png",
+    "tagline": "GrowthHackerAI",
+    "screenshotUrls": [
+      "https://890cedad3e524e62819df09c2e4100bf-s975-chimiv2wh-vistara.vercel.app/screenshot.png",
+      "https://890cedad3e524e62819df09c2e4100bf-s975-chimiv2wh-vistara.vercel.app/screenshot.png"
+    ],
+    "primaryCategory": "social",
+    "tags": [
+      "base",
+      "miniapp",
+      "onchainkit"
+    ],
+    "webhookUrl": "https://890cedad3e524e62819df09c2e4100bf-s975-chimiv2wh-vistara.vercel.app/api/webhook"
+  }
+}
