@@ -1,12 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-  baseURL: "https://openrouter.ai/api/v1",
-  dangerouslyAllowBrowser: false,
-});
-
 export async function POST(request: NextRequest) {
   try {
     const { imageUrl, productDescription, targetPlatforms } = await request.json();
@@ -18,42 +12,68 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Generate ad copy variations using AI
-    const copyPrompt = `
-      Create 3 engaging ad copy variations for a product image. 
-      The copies should be optimized for social media platforms (TikTok and Instagram).
-      
-      Product context: ${productDescription || 'Generic product'}
-      
-      Requirements:
-      - Each copy should be under 150 characters
-      - Include relevant emojis
-      - Use compelling call-to-actions
-      - Optimize for engagement and clicks
-      - Make them distinct from each other in tone and approach
-      
-      Return the copies as a JSON array of strings.
-    `;
-
-    const completion = await openai.chat.completions.create({
-      model: 'google/gemini-2.0-flash-001',
-      messages: [
-        {
-          role: 'user',
-          content: copyPrompt,
-        },
-      ],
-      temperature: 0.8,
-      max_tokens: 500,
-    });
-
-    const content = completion.choices[0].message.content;
     let adCopies: string[];
 
-    try {
-      adCopies = JSON.parse(content || '[]');
-    } catch {
-      // Fallback if JSON parsing fails
+    // Try to use OpenAI if API key is available
+    if (process.env.OPENAI_API_KEY || process.env.OPENROUTER_API_KEY) {
+      try {
+        const openai = new OpenAI({
+          apiKey: process.env.OPENAI_API_KEY || process.env.OPENROUTER_API_KEY,
+          baseURL: "https://openrouter.ai/api/v1",
+          dangerouslyAllowBrowser: false,
+        });
+
+        // Generate ad copy variations using AI
+        const copyPrompt = `
+          Create 3 engaging ad copy variations for a product image. 
+          The copies should be optimized for social media platforms (TikTok and Instagram).
+          
+          Product context: ${productDescription || 'Generic product'}
+          
+          Requirements:
+          - Each copy should be under 150 characters
+          - Include relevant emojis
+          - Use compelling call-to-actions
+          - Optimize for engagement and clicks
+          - Make them distinct from each other in tone and approach
+          
+          Return the copies as a JSON array of strings.
+        `;
+
+        const completion = await openai.chat.completions.create({
+          model: 'google/gemini-2.0-flash-001',
+          messages: [
+            {
+              role: 'user',
+              content: copyPrompt,
+            },
+          ],
+          temperature: 0.8,
+          max_tokens: 500,
+        });
+
+        const content = completion.choices[0].message.content;
+        try {
+          adCopies = JSON.parse(content || '[]');
+        } catch {
+          // Fallback if JSON parsing fails
+          adCopies = [
+            "🔥 Revolutionary product alert! Transform your daily routine with this game-changing innovation. Limited time offer - don't miss out! #ProductLaunch",
+            "This changes everything ✨ See why thousands are switching. Your solution is here! Get yours today 👆 #Innovation",
+            "Finally! The product we've all been waiting for. Premium quality meets affordability. Order now while supplies last! 🚀"
+          ];
+        }
+      } catch (error) {
+        console.error('OpenAI API error:', error);
+        // Use fallback copies if API fails
+        adCopies = [
+          "🔥 Revolutionary product alert! Transform your daily routine with this game-changing innovation. Limited time offer - don't miss out! #ProductLaunch",
+          "This changes everything ✨ See why thousands are switching. Your solution is here! Get yours today 👆 #Innovation",
+          "Finally! The product we've all been waiting for. Premium quality meets affordability. Order now while supplies last! 🚀"
+        ];
+      }
+    } else {
+      // Use fallback copies if no API key is available
       adCopies = [
         "🔥 Revolutionary product alert! Transform your daily routine with this game-changing innovation. Limited time offer - don't miss out! #ProductLaunch",
         "This changes everything ✨ See why thousands are switching. Your solution is here! Get yours today 👆 #Innovation",

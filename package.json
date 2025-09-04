@@ -24,7 +24,8 @@
     "openai": "^4.52.7",
     "lucide-react": "^0.400.0",
     "react-dropzone": "^14.2.3",
-    "recharts": "^2.8.0"
+    "recharts": "^2.8.0",
+    "pino-pretty": "^11.0.0"
   },
   "devDependencies": {
     "@types/node": "^20",
